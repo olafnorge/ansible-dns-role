@@ -1,0 +1,349 @@
+---
+dns_olafnorge_de_compose:
+  version: "3.7"
+  services:
+    dns:
+      deploy:
+        labels: "{{ dns_olafnorge_de_labels }}"
+        placement:
+          constraints: [node.role != manager]
+        mode: global
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 5
+          window: 300s
+        update_config:
+          failure_action: rollback
+          monitor: 120s
+      environment:
+        - APP_DEBUG={{ dns_olafnorge_de_environment.app_debug | default('false') }}
+        - APP_ENV={{ dns_olafnorge_de_environment.app_env | default('development') }}
+        - APP_FALLBACK_LOCALE={{ dns_olafnorge_de_environment.app_fallback_locale | default('en') }}
+        - APP_HOST={{ dns_olafnorge_de_environment.app_host | default('dns.example.com') }}
+        - APP_KEY={{ dns_olafnorge_de_environment.app_key }}
+        - APP_LOCALE={{ dns_olafnorge_de_environment.app_locale | default('en') }}
+        - APP_TIMEZONE={{ dns_olafnorge_de_environment.app_timezone | default('Europe/Berlin') }}
+        - AUTH_GUARD={{ dns_olafnorge_de_environment.auth_guard | default('api') }}
+        - BROADCAST_DRIVER={{ dns_olafnorge_de_environment.broadcast_driver | default('pusher') }}
+        - BROADCAST_REDIS_CONNECTION={{ dns_olafnorge_de_environment.broadcast_redis_connection | default('default') }}
+        - CACHE_DATABASE_CONNECTION={{ dns_olafnorge_de_environment.cache_database_connection | default('null') }}
+        - CACHE_DATABASE_TABLE={{ dns_olafnorge_de_environment.cache_database_table | default('cache') }}
+        - CACHE_DRIVER={{ dns_olafnorge_de_environment.cache_driver | default('file') }}
+        - CACHE_PREFIX={{ dns_olafnorge_de_environment.cache_prefix | default('dns') }}
+        - CACHE_REDIS_CONNECTION={{ dns_olafnorge_de_environment.cache_redis_connection | default('default') }}
+        - CLOUDFLARE_APIKEY={{ dns_olafnorge_de_environment.cloudflare_apikey }}
+        - CLOUDFLARE_EMAIL={{ dns_olafnorge_de_environment.cloudflare_email | default('user@example.com') }}
+        - DB_CHARSET={{ dns_olafnorge_de_environment.db_charset | default('utf8mb4') }}
+        - DB_COLLATION={{ dns_olafnorge_de_environment.db_collation | default('utf8mb4_unicode_ci') }}
+        - DB_CONNECTION={{ dns_olafnorge_de_environment.db_connection | default('mysql') }}
+        - DB_DATABASE={{ dns_olafnorge_de_environment.db_database | default('dns') }}
+        - DB_HOST={{ dns_olafnorge_de_environment.db_host | default('database') }}
+        - DB_PASSWORD={{ dns_olafnorge_de_environment.db_password }}
+        - DB_PORT={{ dns_olafnorge_de_environment.db_port | default('3306') }}
+        - DB_PREFIX={{ dns_olafnorge_de_environment.db_prefix | default('') }}
+        - DB_SCHEMA={{ dns_olafnorge_de_environment.db_schema | default('public') }}
+        - DB_STRICT_MODE={{ dns_olafnorge_de_environment.db_strict_mode | default('false') }}
+        - DB_TIMEZONE={{ dns_olafnorge_de_environment.db_timezone | default('+00:00') }}
+        - DB_USERNAME={{ dns_olafnorge_de_environment.db_username | default('dns') }}
+        - LOCK_DRIVER={{ dns_olafnorge_de_environment.lock_driver | default('semaphore') }}
+        - LOCK_REDIS_CONNECTION={{ dns_olafnorge_de_environment.lock_redis_connection | default('default') }}
+        - LOG_CHANNEL={{ dns_olafnorge_de_environment.log_channel | default('stack') }}
+        - LOG_LEVEL={{ dns_olafnorge_de_environment.log_level | default('debug') }}
+        - LOG_SLACK_WEBHOOK_URL={{ dns_olafnorge_de_environment.log_slack_webhook_url | default('null') }}
+        - LOG_STACK_CHANNELS={{ dns_olafnorge_de_environment.log_stack_channels | default('[]') | join(',') }}
+        - MEMCACHED_HOST={{ dns_olafnorge_de_environment.memcached_host | default('127.0.0.1') }}
+        - MEMCACHED_PORT={{ dns_olafnorge_de_environment.memcached_port | default('11211') }}
+        - PDNS_API_KEY={{ dns_olafnorge_de_environment.pdns_api_key }}
+        - PDNS_BASE_URI={{ dns_olafnorge_de_environment.pdns_base_uri }}
+        - PUSHER_APP_ID={{ dns_olafnorge_de_environment.pusher_app_id | default('null') }}
+        - PUSHER_KEY={{ dns_olafnorge_de_environment.pusher_key | default('null') }}
+        - PUSHER_SECRET={{ dns_olafnorge_de_environment.pusher_secret | default('null') }}
+        - QUEUE_DRIVER={{ dns_olafnorge_de_environment.queue_driver | default('sync') }}
+        - QUEUE_FAILED_TABLE={{ dns_olafnorge_de_environment.queue_failed_table | default('failed_jobs') }}
+        - QUEUE_REDIS_CONNECTION={{ dns_olafnorge_de_environment.queue_redis_connection | default('default') }}
+        - REDIS_CLIENT={{ dns_olafnorge_de_environment.redis_client | default('predis') }}
+        - REDIS_CLUSTER={{ dns_olafnorge_de_environment.redis_cluster | default('false') }}
+        - REDIS_DATABASE={{ dns_olafnorge_de_environment.redis_database | default('0') }}
+        - REDIS_HOST={{ dns_olafnorge_de_environment.redis_host | default('redis') }}
+        - REDIS_PASSWORD={{ dns_olafnorge_de_environment.redis_password | default('null') }}
+        - REDIS_PORT={{ dns_olafnorge_de_environment.redis_port | default('6379') }}
+        - ROLLBAR_BRANCH={{ dns_olafnorge_de_environment.rollbar_branch | default('master') }}
+        - ROLLBAR_CODE_VERSION={{ dns_olafnorge_de_environment.rollbar_code_version | default('master') }}
+        - ROLLBAR_ENABLED={{ dns_olafnorge_de_environment.rollbar_enabled | default('false') }}
+        - ROLLBAR_ENVIRONMENT={{ dns_olafnorge_de_environment.app_env | default('development') }}
+        - ROLLBAR_FRAMEWORK=lumen
+        - ROLLBAR_HOST={{ dns_olafnorge_de_environment.app_host | default('dns.example.com') }}
+        - ROLLBAR_LEVEL={{ dns_olafnorge_de_environment.log_level | default('debug') }}
+        - ROLLBAR_TOKEN={{ dns_olafnorge_de_environment.rollbar_token | default('' | hash('md5')) }}
+        - SQS_SECRET_KEY={{ dns_olafnorge_de_environment.sqs_secret_key | default('') }}
+        - SWARM_CLIENT_TIMEOUT={{ dns_olafnorge_de_environment.swarm_client_timeout | default('10') }}
+        - SWARM_EXTRA_HOSTS={{ dns_olafnorge_de_environment.swarm_extra_hosts | default('[]') | join(',') }}
+        - SWARM_FLOATING_IP={{ dns_olafnorge_de_environment.swarm_floating_ip }}
+        - SWARM_PROXY_BASE_URI={{ dns_olafnorge_de_environment.swarm_proxy_base_uri }}
+        - SWARM_PROXY_INSTANCE_NAME={{ dns_olafnorge_de_environment.swarm_proxy_instance_name }}
+      image: "olafnorge/dns:{{ dns_olafnorge_de_version }}"
+      networks: "{{ dns_olafnorge_de_networks }}"
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - /etc/timezone:/etc/timezone:ro
+    database:
+      deploy:
+        placement:
+          constraints: [node.role != manager]
+        replicas: 1
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 5
+          window: 300s
+        update_config:
+          failure_action: rollback
+          monitor: 120s
+      environment:
+        - MYSQL_DATABASE={{ dns_olafnorge_de_environment.db_database | default('dns') }}
+        - MYSQL_USER={{ dns_olafnorge_de_environment.db_username | default('dns') }}
+        - MYSQL_PASSWORD{{ '_FILE' if dns_olafnorge_de_use_secrets else '' }}={{ '/run/secrets/' if dns_olafnorge_de_use_secrets else '' }}{{ dns_olafnorge_de_environment.db_password | default('') }}
+        - MYSQL_ROOT_PASSWORD{{ '_FILE' if dns_olafnorge_de_use_secrets else '' }}={{ '/run/secrets/' if dns_olafnorge_de_use_secrets else '' }}{{ dns_olafnorge_de_environment.db_root_password | default('') }}
+      image: mysql:5.7
+      networks:
+        - "{{ dns_olafnorge_de_network_internal }}"
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - /etc/timezone:/etc/timezone:ro
+    redis:
+      deploy:
+        placement:
+          constraints: [node.role != manager]
+        replicas: 1
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 5
+          window: 300s
+        update_config:
+          failure_action: rollback
+          monitor: 120s
+      image: redis:4-alpine
+      networks:
+        - "{{ dns_olafnorge_de_network_internal }}"
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - /etc/timezone:/etc/timezone:ro
+    auth:
+      deploy:
+        placement:
+          constraints: [node.role == manager]
+        mode: global
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 5
+          window: 300s
+        update_config:
+          failure_action: rollback
+          monitor: 120s
+      environment:
+        - DB_DATABASE={{ dns_olafnorge_de_environment.db_database | default('dns') }}
+        - DB_HOST={{ dns_olafnorge_de_environment.db_host | default('database') }}
+        - DB_PASSWORD={{ dns_olafnorge_de_environment.db_password }}
+        - DB_PORT={{ dns_olafnorge_de_environment.db_port | default('3306') }}
+        - DB_USERNAME={{ dns_olafnorge_de_environment.db_username | default('dns') }}
+        - PDNS_API_KEY={{ dns_olafnorge_de_environment.pdns_api_key }}
+        - PDNS_DEFAULT_SOA_NAME={{ dns_olafnorge_de_environment.pdns_default_soa_name | default('example.com') }}
+        - PDNS_DNSUPDATE={{ dns_olafnorge_de_environment.pdns_dnsupdate | default('no') }}
+        - PDNS_LOG_DNS_QUERIES={{ dns_olafnorge_de_environment.pdns_log_dns_queries | default('no') }}
+        - PDNS_LOG_LEVEL={{ dns_olafnorge_de_environment.pdns_log_level | default('3') }}
+        - PDNS_MASTER={{ dns_olafnorge_de_environment.pdns_master | default('no') }}
+      image: "olafnorge/pdns-auth:{{ dns_olafnorge_de_version }}"
+      networks:
+        - "{{ dns_olafnorge_de_network_internal }}"
+      ports:
+        - target: 53
+          published: 5300
+          protocol: tcp
+          mode: ingress
+        - target: 53
+          published: 5300
+          protocol: udp
+          mode: ingress
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - /etc/timezone:/etc/timezone:ro
+    rec:
+      deploy:
+        placement:
+          constraints: [node.role == manager]
+        mode: global
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 5
+          window: 300s
+        update_config:
+          failure_action: rollback
+          monitor: 120s
+      environment:
+        - PDNS_API_KEY={{ dns_olafnorge_de_environment.pdns_api_key }}
+        - PDNS_DNSSEC={{ dns_olafnorge_de_environment.pdns_dnssec | default('off') }}
+        - PDNS_FORWARD_ZONES={{ dns_olafnorge_de_environment.pdns_forward_zones | default('[]') | join(',') }}
+        - PDNS_FORWARD_ZONES_RECURSE={{ dns_olafnorge_de_environment.pdns_forward_zones_recurse | default('[]') | join(',') }}
+        - PDNS_LOG_LEVEL={{ dns_olafnorge_de_environment.pdns_log_level | default('3') }}
+      image: "olafnorge/pdns-rec:{{ dns_olafnorge_de_version }}"
+      networks:
+        - "{{ dns_olafnorge_de_network_internal }}"
+      ports:
+        - target: 53
+          published: 53
+          protocol: tcp
+          mode: ingress
+        - target: 53
+          published: 53
+          protocol: udp
+          mode: ingress
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - /etc/timezone:/etc/timezone:ro
+    xtrabackup:
+      command: cron -f -l -L15
+      configs:
+        - source: "dns-crontab-{{ dns_olafnorge_de_crontab_templated.checksum[:10] }}"
+          target: /etc/cron.d/crontab
+          uid: '0'
+          gid: '0'
+          mode: 0644
+      deploy:
+        placement:
+          constraints:
+            - node.role != manager
+        replicas: 1
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 5
+          window: 300s
+        update_config:
+          failure_action: rollback
+          monitor: 120s
+      image: olafnorge/xtrabackup:2.4
+      networks:
+        - "{{ dns_olafnorge_de_network_internal }}"
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+        - /etc/timezone:/etc/timezone:ro
+  networks: "{{ dns_olafnorge_de_network_definitions }}"
+  configs: "{{ dns_olafnorge_de_configs_dict }}"
+
+dns_olafnorge_de_crontab_path: "/root/{{ dns_olafnorge_de_name }}-crontab"
+dns_olafnorge_de_labels: []
+dns_olafnorge_de_crons:
+  - interval: '* * * * *'
+    user: root
+    command: echo 'every minute'
+dns_olafnorge_de_name: dnsolafnorgede
+dns_olafnorge_de_network_definitions: []
+dns_olafnorge_de_network_internal: internal
+dns_olafnorge_de_networks:
+  - "{{ dns_olafnorge_de_network_internal }}"
+dns_olafnorge_de_use_secrets: yes
+dns_olafnorge_de_version: latest
+
+dns_olafnorge_de_environment:
+  app_debug: "false"
+  app_env: production
+  app_fallback_locale: en
+  app_host: dns.example.com
+  app_key: "{{ dns_olafnorge_de_secrets.app_key.name if dns_olafnorge_de_use_secrets else dns_olafnorge_de_app_key }}"
+  app_locale: en
+  app_timezone: Europe/Berlin
+  auth_guard: api
+  broadcast_driver: pusher
+  broadcast_redis_connection: default
+  cache_database_connection: "null"
+  cache_database_table: cache
+  cache_driver: redis
+  cache_prefix: dns
+  cache_redis_connection: default
+  cloudflare_apikey: "{{ dns_olafnorge_de_secrets.cloudflare_apikey.name if dns_olafnorge_de_use_secrets else dns_olafnorge_de_cloudflare_apikey }}"
+  cloudflare_email: user@example.com
+  db_charset: utf8mb4
+  db_collation: utf8mb4_unicode_ci
+  db_connection: mysql
+  db_database: dns
+  db_host: database
+  db_password: "{{ dns_olafnorge_de_secrets.db_password.name if dns_olafnorge_de_use_secrets else dns_olafnorge_de_db_password }}"
+  db_port: 3306
+  db_prefix: ""
+  db_root_password: "{{ dns_olafnorge_de_secrets.db_root_password.name if dns_olafnorge_de_use_secrets else dns_olafnorge_de_db_root_password }}"
+  db_schema: public
+  db_strict_mode: "false"
+  db_timezone: "+00:00"
+  db_username: dns
+  lock_driver: redis
+  lock_redis_connection: default
+  log_channel: stack
+  log_level: error
+  log_slack_webhook_url: "null"
+  log_stack_channels:
+    - errorlog
+    - rollbar
+  memcached_host: 127.0.0.1
+  memcached_port: 11211
+  pdns_api_key: "{{ dns_olafnorge_de_secrets.pdns_api_key.name if dns_olafnorge_de_use_secrets else dns_olafnorge_de_pdns_api_key }}"
+  pdns_base_uri: http://auth
+  pdns_default_soa_name: example.com
+  pdns_dnssec: "off"
+  pdns_dnsupdate: "no"
+  pdns_forward_zones: []
+  pdns_forward_zones_recurse:
+    - ".=1.1.1.1;1.0.0.1"
+  pdns_log_dns_queries: "no"
+  pdns_log_level: 3
+  pdns_master: "no"
+  pusher_app_id: "null"
+  pusher_key: "null"
+  pusher_secret: "null"
+  queue_driver: redis
+  queue_failed_table: failed_jobs
+  queue_redis_connection: default
+  redis_client: phpredis
+  redis_cluster: "false"
+  redis_database: 0
+  redis_host: "redis"
+  redis_password: "null"
+  redis_port: 6379
+  rollbar_branch: "{{ dns_olafnorge_de_version }}"
+  rollbar_code_version: "{{ dns_olafnorge_de_version }}"
+  rollbar_enabled: "true"
+  rollbar_token: "{{ dns_olafnorge_de_secrets.rollbar_token.name if dns_olafnorge_de_use_secrets else dns_olafnorge_de_rollbar_token }}"
+  sqs_secret_key: ""
+  swarm_client_timeout: 10
+  swarm_extra_hosts: []
+
+dns_olafnorge_de_secrets:
+  app_key:
+    data: "{{ dns_olafnorge_de_app_key }}"
+    name: dns_olafnorge_de_app_key
+  cloudflare_apikey:
+    data: "{{ dns_olafnorge_de_cloudflare_apikey }}"
+    name: dns_olafnorge_de_cloudflare_apikey
+  db_password:
+    data: "{{ dns_olafnorge_de_db_password }}"
+    name: dns_olafnorge_de_db_password
+  db_root_password:
+    data: "{{ dns_olafnorge_de_db_root_password }}"
+    name: dns_olafnorge_de_db_root_password
+  pdns_api_key:
+    data: "{{ dns_olafnorge_de_pdns_api_key }}"
+    name: dns_olafnorge_de_pdns_api_key
+  rollbar_token:
+    data: "{{ dns_olafnorge_de_rollbar_token }}"
+    name: dns_olafnorge_de_rollbar_token
+
+# vaults, you may define them in a separate file which overrides these defaults
+dns_olafnorge_de_app_key: # FIXME: add your vault here using 'ansible-vault'
+dns_olafnorge_de_cloudflare_apikey: # FIXME: add your vault here using 'ansible-vault'
+dns_olafnorge_de_db_password: # FIXME: add your vault here using 'ansible-vault'
+dns_olafnorge_de_db_root_password: # FIXME: add your vault here using 'ansible-vault'
+dns_olafnorge_de_pdns_api_key: # FIXME: add your vault here using 'ansible-vault'
+dns_olafnorge_de_rollbar_token: # FIXME: add your vault here using 'ansible-vault'

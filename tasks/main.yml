@@ -1,0 +1,54 @@
+---
+- name: assert required variables are set and have reasonable values
+  assert:
+    that:
+      - (dns_olafnorge_de_labels | length) > 0
+      - (dns_olafnorge_de_network_definitions | length) > 0
+      - (dns_olafnorge_de_networks | length) > 0
+      - dns_olafnorge_de_environment is defined
+      - dns_olafnorge_de_environment.app_key is defined
+      - (dns_olafnorge_de_environment.app_key | length) > 0
+      - dns_olafnorge_de_environment.db_password is defined
+      - (dns_olafnorge_de_environment.db_password | length) > 0
+      - dns_olafnorge_de_environment.rollbar_enabled is defined
+      - (not (dns_olafnorge_de_environment.rollbar_enabled)) or
+        (
+        (dns_olafnorge_de_environment.rollbar_enabled) and
+        (dns_olafnorge_de_environment.rollbar_token is defined) and
+        ((dns_olafnorge_de_environment.rollbar_token | length) > 0)
+        )
+      - dns_olafnorge_de_environment.swarm_floating_ip is defined
+      - (dns_olafnorge_de_environment.swarm_floating_ip | length) > 0
+      - dns_olafnorge_de_environment.swarm_floating_ip | ipaddr
+      - dns_olafnorge_de_environment.swarm_proxy_base_uri is defined
+      - (dns_olafnorge_de_environment.swarm_proxy_base_uri | urlsplit | length) > 0
+      - dns_olafnorge_de_environment.swarm_proxy_instance_name is defined
+      - (dns_olafnorge_de_environment.swarm_proxy_instance_name | length) > 0
+
+- name: create secrets for dns.example.com
+  docker_secret:
+    data: "{{ item.value.data }}"
+    name: "{{ item.value.name }}"
+    state: present
+  no_log: yes
+  with_dict: "{{ dns_olafnorge_de_secrets }}"
+  when: dns_olafnorge_de_use_secrets
+
+- name: write crontab skeleton
+  template:
+    dest: "{{ dns_olafnorge_de_crontab_path }}"
+    mode: 0600
+    src: crontab.j2
+  register: dns_olafnorge_de_crontab_templated
+
+- name: register dynamic name of crontab skeleton
+  set_fact:
+    dns_olafnorge_de_configs_dict: "{'dns-crontab-{{ dns_olafnorge_de_crontab_templated.checksum[:10] }}':{'file':'{{ dns_olafnorge_de_crontab_path }}'}}"
+
+- name: spawn dns.example.com service
+  docker_stack:
+    compose:
+      - "{{ dns_olafnorge_de_compose }}"
+    name: "{{ dns_olafnorge_de_name }}"
+    prune: yes
+    state: present
